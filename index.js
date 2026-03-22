@@ -28,3 +28,17 @@ app.listen(port, () => {
 // res.json() - send JSON response
 // res.status() - set status code
 // res.send() - send response
+
+// TRY FRONTEND NOW before moving on
+// go to FONT folder and open index.html in the browser, check console for errors, fix them, and see the data being displayed
+
+// CORS - Cross-Origin Resource Sharing
+// npm i cors
+// app.use(cors())
+
+// REFACTORING
+// 1. Create a separate file for routes (e.g., routes.js)
+// 2. Create a separate file for controllers (e.g., controllers.js)
+// 3. Change commonJs to ES6 modules (e.g., import/export) - this will require adding "type": "module" in package.json
+
+// push to github and share the link
