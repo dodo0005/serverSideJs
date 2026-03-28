@@ -4,7 +4,12 @@ import * as studentsService from '../services/studentServices.js'
 export function getAll(req, res) {
   try {
     const students = studentsService.getAllStudents()
-    res.json(students)
+
+    if (!students || students.length === 0) {
+      return res.status(404).json({ msg: "Students not found" })
+    }
+
+    res.status(200).json(students)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Internal server error' })

@@ -1,71 +1,68 @@
-# Exercise 01 — File System & JSON
+# ServerSideJs
 
-## Goal
+> A Node.js project for building and exploring a simple API.
 
-Read a JSON file, transform its data, and write the result to a Markdown file — all using Node.js built-in modules, no `npm install` needed.
+This project demonstrates how to create a basic server-side application using Node.js. It focuses on handling HTTP requests, routing, and serving JSON responses.
 
-## What you will build
+## 🧠 Project Overview
 
-A script that reads `students.json` and generates a `student_report.md` file.
+The main goal is to practice:
 
-## Run it
+* Creating a server with Node.js
+* Handling GET and POST requests
+* Working with JSON data
+* Structuring a simple API project
+
+## 🚀 Getting Started
+
+### Clone the Repo
+
+```bash
+git clone https://github.com/dodo0005/serverSideJs.git
+```
+
+### Install Dependencies
+
+If you have any dependencies listed in `package.json`:
+
+```bash
+npm install
+```
+
+### Run the Server
+
+From the project root:
 
 ```bash
 node index.js
 ```
 
-If it works, you should see a success message in the terminal and a new `student_report.md` file appear next to `index.js`.
+Your API will be running on the configured port (default: 3000).
 
-## Modules you will need
+## 📁 Project Structure
 
-| Module | What it does                            |
-| ------ | --------------------------------------- |
-| `fs`   | Read and write files on your filesystem |
-| `path` | Build file paths that work on any OS    |
-
-Both are built into Node.js — just `require` them, no install needed.
-
-## Key functions
-
-- `fs.readFileSync(filePath, 'utf-8')` — reads a file and returns its contents as a string
-- `fs.writeFileSync(filePath, content, 'utf-8')` — writes a string to a file (creates it if it doesn't exist)
-- `JSON.parse(string)` — converts a JSON string into a JavaScript object
-- `path.join(__dirname, 'filename')` — builds a safe absolute path relative to the current script
-
-## Steps
-
-1. Require the `fs` and `path` modules
-2. Read `students.json` using `fs.readFileSync`
-3. Parse the JSON string into a JavaScript array using `JSON.parse`
-4. Build a Markdown string by looping over the students array
-5. Write the result to `student_report.md` using `fs.writeFileSync`
-
-## Expected output
-
-The generated `student_report.md` should look like this:
-
-```markdown
-# Student Report
-
-Generated on: 20/03/2026
-
-## Summary
-
-Total Students: 3
-
-## Student Details
-
-### Alice Martin
-
-- **Email:** alice.martin@epita.fr
-- **Major:** Computer Science
-- **GPA:** 3.8
-- **ID:** 1
-  ...
+```
+.
+├── controllers/         # controller logic for handling routes
+├── middleware/          # middleware logic
+├── routes/              # routing logic
+├── services/            # helper/service modules
+├── index.js             # entry point
+├── package.json         # Node project config
+├── .gitignore           # ignored files
+├── README.md            # project documentation
 ```
 
-## Hints
+## What You’ll Learn
 
-- `__dirname` is a Node.js variable that always points to the folder where your script lives — useful for building reliable file paths
-- `Array.forEach()` lets you loop over each student and append their info to your Markdown string
-- Template literals (backticks) make it easy to embed variables inside strings: `` `Hello ${name}` ``
+* Building a server using Node.js
+* Structuring a simple API project
+* Sending and receiving JSON responses
+* Using middleware for request processing
+
+## Tips
+
+* Use `http` or `express` to create endpoints.
+* Structure your code into controllers, services, and routes for clarity.
+* Test your endpoints with tools like Postman or curl.
+
