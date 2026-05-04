@@ -1,22 +1,38 @@
+import mongoose from "mongoose";
 
 export function validateId(req, res, next) {
-  const id = parseInt(req.params.id)
+  const { id } = req.params;
 
-  if (isNaN(id)) {
-    return res.status(400).json({ message: 'Invalid ID format' })
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID format" });
   }
 
-  next()
+  next();
 }
 
+import fs from "fs";
+
 export function validateStudent(req, res, next) {
-  const { id, name } = req.body
+  const { name, email, major, gpa } = req.body;
 
-  if (!id || !name) {
-    return res.status(400).json({
-      message: 'Student must have id and name'
-    })
-  }
+  const reject = (message) => {
+    if (req.file) {
+      fs.unlink(req.file.path, () => {});
+    }
+    return res.status(400).json({ message });
+  };
 
-  next()
+  if (!name) return reject("Name is required");
+  if (!email) return reject("Email is required");
+  if (!major) return reject("Major is required");
+  if (gpa === undefined) return reject("GPA is required");
+
+  if (gpa < 0 || gpa > 4)
+    return reject("GPA must be between 0 and 4");
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email))
+    return reject("Email is not valid");
+
+  next();
 }

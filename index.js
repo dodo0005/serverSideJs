@@ -2,23 +2,33 @@ import express from "express" // new js
 
 import cors from 'cors'
 import studentsRoutes from './routes/studentRoutes.js'
+import "dotenv/config";
+import connectDB from "./config/db.js";
+import errorHandler from "./middleware/errorMiddleware.js";
+import courseRoutes from "./routes/courseRoutes.js";
+
+
+	
 
 const app = express()
-const port = 3000
+await connectDB();
+const port = process.env.PORT || 3000;
 
 app.use(cors())
 app.use(express.json())
 
+
 app.get("/", (req, res) => {
 	res.json({ msg: "Hello World!" })
 })
- 
+app.use("/api/courses", courseRoutes);
 app.use('/api/students', studentsRoutes)
+app.use(express.static("public"));
+app.use(errorHandler);
 
 app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`)
+	console.log(`✅ Server running on http://localhost:${port}`)
 })
-
 
 
 // NODEMON
