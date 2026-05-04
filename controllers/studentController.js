@@ -1,87 +1,91 @@
 import * as studentsService from '../services/studentServices.js'
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 
-export function getAll(req, res) {
+export async function getAll(req, res) {
   try {
-    const students = studentsService.getAllStudents()
-
-    if (!students || students.length === 0) {
-      return res.status(404).json({ msg: "Students not found" })
-    }
-
-    res.status(200).json(students)
+    const students = await studentsService.getAllStudents();
+    const toStudentDTO = (student) => ({ // this part here ‼️
+      id: student._id,      
+      email: student.email,
+    });
+    const studentsDTO = students.map(toStudentDTO);
+    res.status(200).json(studentsDTO);
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
+  res.status(404).json({ message: error.message });
+}
 }
 
-
-export function getOne(req, res) {
+export async function getOne(req, res) {
   try {
-    const id = parseInt(req.params.id)
-    const student = studentsService.getStudentById(id)
+    const id = req.params.id;
+
+    const student = await studentsService.getStudentById(id);
 
     if (!student) {
-      return res.status(404).json({ message: 'Student not found' })
+      return res.status(404).json({ message: 'Student not found' });
     }
 
-    res.json(student)
+    res.json(student);
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
+  console.error(error); 
+  res.status(500).json({ message: error.message });
+}
+}
+
+
+export const create = async (req, res) => {
+  try {
+    const { name, email, password, gpa, major } = req.body;
+    const newStudent = { name, email, password, gpa, major };
+    const loggedUser = await studentsService.createStudent(newStudent);
+    const token = jwt.sign({ id: loggedUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    }); // signed token with user's id ONLY
+    const toStudentDTO = (student) => ({
+      id: student._id,
+      email: student.email,
+    });
+    res.status(201).json({ token, user: toStudentDTO(loggedUser) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 }
 
 
-export function create(req, res) {
+export async function update(req, res) {
   try {
-    const newStudent = req.body
+    const id = req.params.id;
 
-    if (!newStudent || !newStudent.id || !newStudent.name) {
-      return res.status(400).json({ message: 'Invalid student data' })
-    }
-
-    const created = studentsService.createStudent(newStudent)
-    res.status(201).json(created)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
-
-export function update(req, res) {
-  try {
-    const id = parseInt(req.params.id)
-
-    const updated = studentsService.updateStudent(id, req.body)
+    const updated = await studentsService.updateStudent(id, req.body);
 
     if (!updated) {
-      return res.status(404).json({ message: 'Student not found' })
+      return res.status(404).json({ message: 'Student not found' });
     }
 
-    res.json(updated)
+    res.json(updated);
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
+  console.error(error);
+  res.status(500).json({ message: error.message });
+}
 }
 
 
-export function remove(req, res) {
+export async function remove(req, res) {
   try {
-    const id = parseInt(req.params.id)
+    const id = req.params.id;
 
-    const deleted = studentsService.deleteStudent(id)
+    const deleted = await studentsService.deleteStudent(id);
 
     if (!deleted) {
-      return res.status(404).json({ message: 'Student not found' })
+      return res.status(404).json({ message: 'Student not found' });
     }
 
-    res.json(deleted)
+    res.json(deleted);
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
+  console.error(error); 
+  res.status(500).json({ message: error.message });
+}
 }
